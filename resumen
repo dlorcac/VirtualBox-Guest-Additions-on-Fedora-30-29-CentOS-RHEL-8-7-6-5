@@ -1,0 +1,110 @@
+This is guide, howto install Oracle VirtualBox Guest Additions on Fedora, CentOS and Red Hat (RHEL). This guide should work with Fedora 30/29/28/27/26/25/24/23, CentOS 8.0/7.7/6.10/5.11, Red Hat (RHEL) 8.0/7.7/6.10/5.11.
+
+VirtualBox Guest Additions is special software that can be installed inside Linux virtual machines to improve performance and make integration much more seamless. Among the features provided by these VirtualBox Guest Additions are mouse pointer integration and arbitrary screen solutions (e.g. by resizing the guest window).
+
+Note: Fedora 30/29/28 have build in VirtualBox Guest Additions, but if you still wan’t (some reason) install latest/development/different version of GA, then you can use this guide.
+
+
+ 
+Install VirtualBox Guest Additions on Fedora, CentOS and Red Hat (RHEL)
+
+1. Change root user
+su -
+## OR ##
+sudo -i
+
+
+2. Make sure that you are running latest kernel
+Update virtual machine kernel and reboot
+
+## Fedora 30/29/28/27/26/25/24/23 and CentOS 8 / RHEL 8 ##
+dnf update kernel*
+
+## CentOS/RHEL 7/6/5 ##
+yum update kernel*
+
+reboot
+
+
+3. Mount VirtualBox Guest Additions
+Click Devices > Install Guest Additions… on VirtualBox
+VirtualBox Install Guest Additions
+
+Note: Some cases you might need Guest Additions Test Build ISO from here. Next shutdown your virtual machine attach this iso and boot. Then continue next step.
+
+Mount VirtualBox Guest Additions device
+mkdir /media/VirtualBoxGuestAdditions
+mount -r /dev/cdrom /media/VirtualBoxGuestAdditions
+
+
+4. Install following packages
+On CentOS/Red Hat (RHEL) 8/7/6/5, EPEL repo is needed
+
+## CentOS 8 and Red Hat (RHEL) 8 ##
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+## CentOS 7 and Red Hat (RHEL) 7 ##
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+## CentOS 6 and Red Hat (RHEL) 6 ##
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
+ 
+## CentOS 5 and Red Hat (RHEL) 5 ##
+rpm -Uvh http://archives.fedoraproject.org/pub/archive/epel/epel-release-latest-5.noarch.rpm
+Install following packages
+
+## Fedora 30/29/28/27/26/25/24/23 ##
+dnf install gcc kernel-devel kernel-headers dkms make bzip2 perl libxcrypt-compat
+
+## CentOS/RHEL 8/7/6/5 ##
+yum install gcc kernel-devel kernel-headers dkms make bzip2 perl
+
+
+
+
+5. Add KERN_DIR environment variable
+
+## Current running kernel on Fedora 30/29/28/27/26/25/24/23, CentOS 8/7/6 and Red Hat (RHEL) 8/7/6 ##
+KERN_DIR=/usr/src/kernels/`uname -r`
+
+## Current running kernel on CentOS 5 and Red Hat (RHEL) 5 ##
+KERN_DIR=/usr/src/kernels/`uname -r`-`uname -m`
+
+## Fedora example ##
+KERN_DIR=/usr/src/kernels/4.15.6-300.fc27.x86_64/build
+
+## CentOS and Red Hat (RHEL) example ##
+KERN_DIR=/usr/src/kernels/3.10.0-693.17.1.el7-x86_64/build
+
+## Export KERN_DIR ##
+export KERN_DIR
+
+
+
+6. Install Guest Additions
+cd /media/VirtualBoxGuestAdditions
+
+# Then run following command
+./VBoxLinuxAdditions.run
+
+ 
+Output looks like following:
+
+[root@fedora VBoxGuestAdditions]# ./VBoxLinuxAdditions.run 
+Verifying archive integrity... All good.
+Uncompressing VirtualBox 6.0.13 Guest Additions for Linux........
+VirtualBox Guest Additions installer
+Removing installed version 6.0.13 of VirtualBox Guest Additions...
+Copying additional installer modules ...
+Installing additional modules ...
+VirtualBox Guest Additions: Building the VirtualBox Guest Additions kernel modules.  This may take a while.
+VirtualBox Guest Additions: Running kernel modules will not be replaced until the system is restarted
+VirtualBox Guest Additions: Starting.
+
+
+7. Reboot guest system
+
+reboot
+
+
+Then VirtualBox Guest Additions install is ready.
